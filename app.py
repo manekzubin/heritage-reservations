@@ -317,7 +317,47 @@ def ota_push_availability(ota_name, room_type_id):
         snapshot.append({'date': d.isoformat(), 'available': available})
     return render_template('ota_sync.html', ota=ota_name, room_type=rt, snapshot=snapshot)
 
+# -------------------------
+# Auto-seed on first run (useful for Render free tier where shell is not available)
+# -------------------------
+with app.app_context():
+    try:
+        # create tables if missing
+        db.create_all()
+    except Exception as e:
+        # If DB backend not available (e.g., DATABASE_URL wrong), log and continue
+        print("Warning: db.create_all() failed during startup:", str(e))
+
+    # Seed only if no properties exist
+    try:
+        if Property.query.count() == 0:
+            print("Auto-seeding database with sample data...")
+            p = Property(name='Heritage Group of Hospitality')
+            db.session.add(p)
+            db.session.commit()
+
+            h1 = Hotel(property_id=p.id, name='Kutch Heritage', city='Bhuj', description='A heritage stay in Kutch')
+            h2 = Hotel(property_id=p.id, name='Heritage Palace', city='Bhuj', description='Comfort and tradition')
+            db.session.add_all([h1, h2])
+            db.session.commit()
+
+            rt1 = RoomType(hotel_id=h1.id, name='Deluxe Double', capacity=2, price=2500, quantity=5)
+            rt2 = RoomType(hotel_id=h1.id, name='Family Suite', capacity=4, price=4500, quantity=2)
+            rt3 = RoomType(hotel_id=h2.id, name='Standard Room', capacity=2, price=2000, quantity=10)
+            db.session.add_all([rt1, rt2, rt3])
+            db.session.commit()
+
+            admin = User(email='admin@heritage.local', role='admin')
+            admin.set_password('password123')
+            db.session.add(admin)
+            db.session.commit()
+            print('Auto-seed complete: admin@heritage.local / password123')
+    except Exception as e:
+        # Log seed errors without stopping the app
+        print("Auto-seed skipped/failed:", str(e))
+
 if __name__ == '__main__':
+    # For local dev: keep previous behavior of creating DB if using local sqlite
     if not os.path.exists(SQLITE_PATH) and 'DATABASE_URL' not in os.environ:
         db.create_all()
     app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
