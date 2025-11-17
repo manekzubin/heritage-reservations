@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h2>Availability Calendar: {{ room_type.name }} - {{ room_type.hotel.name }}</h2>
+  <div id='calendar'></div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: '/api/calendar_events/{{ room_type.id }}',
+        headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,dayGridWeek' },
+        eventDisplay: 'auto',
+        dayMaxEvents: true
+      });
+      calendar.render();
+    });
+  </script>
+{% endblock %}

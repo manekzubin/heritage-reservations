@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h2>Admin Dashboard</h2>
+  <form method="get">
+    <label>Property</label>
+    <select name="property_id">
+      <option value="">All</option>
+      {% for p in properties %}
+        <option value="{{ p.id }}">{{ p.name }}</option>
+      {% endfor %}
+    </select>
+    <label>Hotel ID</label>
+    <input name="hotel_id" value="{{ request.args.get('hotel_id','') }}">
+    <label>Room Type ID</label>
+    <input name="room_type_id" value="{{ request.args.get('room_type_id','') }}">
+    <label>Date from</label>
+    <input name="date_from" type="date" value="{{ request.args.get('date_from','') }}">
+    <label>Date to</label>
+    <input name="date_to" type="date" value="{{ request.args.get('date_to','') }}">
+    <button type="submit">Filter</button>
+    <button name="export" value="csv">Export CSV</button>
+  </form>
+  <table>
+    <thead><tr><th>ID</th><th>Source</th><th>Guest</th><th>Property</th><th>Hotel</th><th>RoomType</th><th>Check-in</th><th>Check-out</th></tr></thead>
+    <tbody>
+      {% for r in reservations %}
+        <tr>
+          <td>{{ r.id }}</td>
+          <td>{{ r.source }}{% if r.external_id %} ({{ r.external_id }}){% endif %}</td>
+          <td>{{ r.guest_name }}<br>{{ r.guest_email }}</td>
+          <td>{{ r.room_type.hotel.property.name }}</td>
+          <td>{{ r.room_type.hotel.name }}</td>
+          <td>{{ r.room_type.name }}</td>
+          <td>{{ r.check_in }}</td>
+          <td>{{ r.check_out }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="8">No reservations</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
