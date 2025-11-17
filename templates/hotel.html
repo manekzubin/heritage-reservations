@@ -1,17 +1,1 @@
-{% extends 'base.html' %}
-{% block content %}
-  <h2>{{ hotel.name }}</h2>
-  <p>{{ hotel.description }}</p>
-  <h3>Room Types</h3>
-  <div class="grid">
-    {% for rt in hotel.room_types %}
-      <div class="card">
-        <h4>{{ rt.name }}</h4>
-        <p>Capacity: {{ rt.capacity }} | Price: ₹{{ rt.price }} | Quantity: {{ rt.quantity }}</p>
-        <a class="btn" href="{{ url_for('book_room', room_type_id=rt.id) }}">Book</a>
-        <a class="btn" href="{{ url_for('calendar_view', room_type_id=rt.id) }}">Calendar</a>
-        <a class="btn" href="{{ url_for('ota_push_availability', ota_name='booking.com', room_type_id=rt.id) }}">Push availability</a>
-      </div>
-    {% endfor %}
-  </div>
-{% endblock %}
+<!-- FULL hotel.html from canvas -->

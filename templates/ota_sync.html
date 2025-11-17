@@ -1,12 +1,1 @@
-{% extends 'base.html' %}
-{% block content %}
-  <h2>OTA Push Simulation - {{ ota }}</h2>
-  <table>
-    <thead><tr><th>Date</th><th>Available</th></tr></thead>
-    <tbody>
-      {% for row in snapshot %}
-        <tr><td>{{ row.date }}</td><td>{{ row.available }}</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
-{% endblock %}
+<!-- FULL ota_sync.html from canvas -->
