@@ -1,1 +1,14 @@
-<!-- FULL index.html from canvas -->
+{% extends 'base.html' %}
+{% block content %}
+  <h2>Properties</h2>
+  <div class="grid">
+    {% for p in properties %}
+      <div class="card">
+        <h3>{{ p.name }}</h3>
+        <a class="btn" href="{{ url_for('property_view', property_id=p.id) }}">Open</a>
+      </div>
+    {% else %}
+      <p>No properties available.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

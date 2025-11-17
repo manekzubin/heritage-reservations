@@ -1,1 +1,18 @@
-<!-- FULL admin_reconcile.html from canvas -->
+{% extends 'base.html' %}
+{% block content %}
+  <h2>Reconciliation - Conflicts</h2>
+  {% if conflicts %}
+    {% for c in conflicts %}
+      <div class="card">
+        <h4>{{ c.room_type.name }} @ {{ c.room_type.hotel.name }} - {{ c.date }} ({{ c.count }} bookings, qty {{ c.room_type.quantity }})</h4>
+        <ul>
+          {% for r in c.reservations %}
+            <li>#{{ r.id }} - {{ r.source }} - {{ r.guest_name }} ({{ r.check_in }} to {{ r.check_out }})</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No conflicts detected.</p>
+  {% endif %}
+{% endblock %}

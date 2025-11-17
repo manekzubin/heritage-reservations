@@ -1,1 +1,16 @@
-<!-- FULL book.html from canvas -->
+{% extends 'base.html' %}
+{% block content %}
+  <h2>Book: {{ room_type.name }} ({{ room_type.hotel.name }})</h2>
+  <form method="post">
+    <label>Your name</label>
+    <input name="name" required>
+    <label>Your email</label>
+    <input name="email" type="email" required>
+    <label>Check-in</label>
+    <input name="check_in" type="date" required>
+    <label>Check-out</label>
+    <input name="check_out" type="date" required>
+    <button type="submit">Reserve</button>
+  </form>
+  <p>Note: system checks availability and prevents overbooking.</p>
+{% endblock %}
